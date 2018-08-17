@@ -1,45 +1,49 @@
 <?xml version="1.0"?>
 <web-app xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" version="3.0">
+    <!-- needs to be global, doesn't work as init param -->
     <context-param>
         <param-name>resteasy.scan</param-name>
         <param-value>true</param-value>
     </context-param>
 
+    <!-- fully configured service using an Application class and an exception mapper -->
 	<servlet>
-	    <servlet-name>AtmExtServices</servlet-name>
+	    <servlet-name>MyLocalService</servlet-name>
 	    <servlet-class>org.jboss.resteasy.plugins.server.servlet.HttpServletDispatcher</servlet-class>
 	    <init-param>
 	        <param-name>javax.ws.rs.Application</param-name>
-	        <param-value>com.six_group.ao.tfo.atm.ext_services.atm_services.AtmExtServices</param-value>
+	        <param-value>com.example.myservices.MyServices</param-value>
 	    </init-param>
 	    <init-param>
 	        <param-name>resteasy.servlet.mapping.prefix</param-name>
-	        <param-value>/atm-services</param-value>
+	        <param-value>/services</param-value>
 	    </init-param>
 		<init-param>
 		    <param-name>resteasy.providers</param-name>
-		    <param-value>com.six_group.ao.tfo.atm.ext_services.atm_services.RestExceptionMapper</param-value>   
+		    <param-value>com.example.myservices.RestExceptionMapper</param-value>   
 		</init-param>
 	    <load-on-startup>5</load-on-startup>
 	</servlet>
 
+    <!-- an external service included as a jar -->
 	<servlet>
-	    <servlet-name>controlport</servlet-name>
+	    <servlet-name>ServiceFromDependency</servlet-name>
 	    <servlet-class>org.jboss.resteasy.plugins.server.servlet.HttpServletDispatcher</servlet-class>
 	    <init-param>
 	        <param-name>javax.ws.rs.Application</param-name>
-	        <param-value>com.six_group.ao.controlport.ControlPortApplication</param-value>
+	        <param-value>com.other.service.OtherService</param-value>
 	    </init-param>
 	    <load-on-startup>5</load-on-startup>
 	</servlet>
 	
+    <!-- another resource providing a servlet -->
     <servlet>
         <servlet-name>metrics</servlet-name>
         <servlet-class>com.codahale.metrics.servlets.AdminServlet</servlet-class>
     </servlet>
 
     <servlet-mapping>
-        <servlet-name>AtmExtServices</servlet-name>
+        <servlet-name>MyLocalervices</servlet-name>
         <url-pattern>/atm-services/*</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
@@ -47,7 +51,7 @@
         <url-pattern>/metrics/*</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>controlport</servlet-name>
-        <url-pattern>/rest/controlport/*</url-pattern>
+        <servlet-name>ServiceFromDependency</servlet-name>
+        <url-pattern>/rest/otherservice/*</url-pattern>
     </servlet-mapping>
 </web-app>
