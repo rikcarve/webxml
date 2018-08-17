@@ -33,6 +33,11 @@
 	        <param-name>javax.ws.rs.Application</param-name>
 	        <param-value>com.other.service.OtherService</param-value>
 	    </init-param>
+        <!-- this param is needed to replace the @ApplicationPath("/rest") -->
+	    <init-param>
+	        <param-name>resteasy.servlet.mapping.prefix</param-name>
+	        <param-value>/rest</param-value>
+	    </init-param>
 	    <load-on-startup>5</load-on-startup>
 	</servlet>
 	
